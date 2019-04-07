@@ -1,4 +1,60 @@
 package client.gui;
 
-public class WAMGUI {
+import client.WAMBoard;
+import client.WAMNetworkClient;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class WAMGUI extends Application {
+    private WAMBoard board;
+    private WAMNetworkClient client;
+
+    @Override
+    public void init() {
+        try {
+            List<String> args = getParameters().getRaw();
+
+            String host = args.get(0);
+            int port = Integer.parseInt(args.get(1));
+
+            this.board = new WAMBoard();
+            try {
+                this.client = new WAMNetworkClient(host, port, this.board);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void start (Stage stage) throws Exception {
+        BorderPane borderPane = new BorderPane();
+        GridPane gridPane = new GridPane();
+        int position = 0;
+        ArrayList<Button> buttons = new ArrayList();
+        for (int row=0; row<this.board.ROWS; ++row) {
+            Button[] buttrow = new Button[this.board.COLS];
+            for (int col=0; col<this.board.COLS; ++col) {
+                Button button = new Button();
+                button.setId(String.valueOf(position++));
+                buttons.add(button);
+                buttrow[col] = button;
+            }
+            gridPane.addRow(row, buttrow);
+        }
+        borderPane.setCenter(gridPane);
+        Scene scene = new Scene(borderPane);
+        stage.setScene(scene);
+        stage.show();
+    }
 }
