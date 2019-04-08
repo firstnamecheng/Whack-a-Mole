@@ -1,11 +1,12 @@
 package server;
 
+import common.WAMProtocol;
+
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.ArrayList;
 
-public class WAMServer implements Runnable {
+public class WAMServer implements Runnable, WAMProtocol {
 
     private int rows;
     private int cols;
@@ -26,23 +27,29 @@ public class WAMServer implements Runnable {
             server = new ServerSocket( port );
         }
         catch ( IOException e ) {
-            System.out.println( "Error while setting up server.");
+            System.err.println( "Error while setting up server.");
         }
+        players = new ArrayList<>();
     }
 
     @Override
     public void run() {
         try {
+            // Waits for all the players to connect
             for ( int n = 0; n < numPlayers; n++ ) {
-                players.add( new WAMPlayer( server.accept(),
-                                            rows,
-                                            cols,
-                                            numPlayers,
-                                            n ) );
+                WAMPlayer player = new WAMPlayer( server.accept() );
+                players.add( player );
+                player.send( WELCOME + " " + rows + " " + cols
+                        + " " + numPlayers + " " + n );
             }
+
+            // Starts the game
+            WAMGame game = new WAMGame( rows, cols, gameTime, players );
+            game.start();
+
         }
         catch ( IOException e ) {
-            System.out.println( "Error while setting up connections with players." );
+            System.err.println( "Error while setting up connections with players." );
         }
 
     }
