@@ -36,7 +36,7 @@ public class WAMBoard {
     private int[] scores;
 
 
-    WAMGUI view;
+    private WAMGUI view;
 
     public WAMBoard( int rows, int cols, int numPlayers, WAMGUI view ) {
         this.view = view;
