@@ -25,13 +25,15 @@ public class WAMGUI extends Application {
             String host = args.get(0);
             int port = Integer.parseInt(args.get(1));
 
-            this.board = new WAMBoard();
             try {
-                this.client = new WAMNetworkClient(host, port, this.board);
+                this.client = new WAMNetworkClient(host, port);
             }
             catch (Exception e) {
                 e.printStackTrace();
             }
+
+            this.board = client.getBoard();
+            this.board.addObserver( this );
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -43,13 +45,14 @@ public class WAMGUI extends Application {
         GridPane gridPane = new GridPane();
         int position = 0;
         ArrayList<Button> buttons = new ArrayList();
-        for (int row=0; row<this.board.getRows; ++row) {
-            Button[] buttrow = new Button[this.board.getCols];
-            for (int col=0; col<this.board.getCols; ++col) {
+        for (int row=0; row<this.board.getRows(); ++row) {
+            Button[] buttrow = new Button[this.board.getCols()];
+            for (int col=0; col<this.board.getCols(); ++col) {
                 Button button = new Button();
                 button.setId(String.valueOf(position++));
                 buttons.add(button);
                 buttrow[col] = button;
+                // TODO add event handler and graphics for each button
             }
             gridPane.addRow(row, buttrow);
         }

@@ -6,7 +6,7 @@ public class WAMBoard {
 
 
     private enum Status {
-        I_WON, I_LOST, TIE, ERROR;
+        I_WON, I_LOST, TIE, NOT_OVER, ERROR;
 
         private String message = null;
 
@@ -38,8 +38,7 @@ public class WAMBoard {
 
     private WAMGUI view;
 
-    public WAMBoard( int rows, int cols, int numPlayers, WAMGUI view ) {
-        this.view = view;
+    public WAMBoard( int rows, int cols, int numPlayers ) {
         this.rows = rows;
         this.cols = cols;
         moles = new int[ rows * cols ];
@@ -47,6 +46,11 @@ public class WAMBoard {
         for ( int i = 0; i < numPlayers; i++ ) {
             scores[i] = 0;
         }
+        status = Status.NOT_OVER;
+    }
+
+    public void addObserver( WAMGUI view ) {
+        this.view = view;
     }
 
     public void moleUp( int moleNum ) {
