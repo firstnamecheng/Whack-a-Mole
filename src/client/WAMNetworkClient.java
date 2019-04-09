@@ -45,4 +45,13 @@ public class WAMNetworkClient {
     public void whack(int mole) {
         this.networkOut.println(WAMProtocol.WHACK + " " + mole + " " + this.id);
     }
+
+    public void run() {
+        while (this.goodToGo()) {
+            try {
+                String request = this.networkIn
+            }
+        }
+    }
+
 }

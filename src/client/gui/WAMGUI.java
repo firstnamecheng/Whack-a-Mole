@@ -3,6 +3,7 @@ package client.gui;
 import client.WAMBoard;
 import client.WAMNetworkClient;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
@@ -42,9 +43,9 @@ public class WAMGUI extends Application {
         GridPane gridPane = new GridPane();
         int position = 0;
         ArrayList<Button> buttons = new ArrayList();
-        for (int row=0; row<this.board.ROWS; ++row) {
-            Button[] buttrow = new Button[this.board.COLS];
-            for (int col=0; col<this.board.COLS; ++col) {
+        for (int row=0; row<this.board.getRows; ++row) {
+            Button[] buttrow = new Button[this.board.getCols];
+            for (int col=0; col<this.board.getCols; ++col) {
                 Button button = new Button();
                 button.setId(String.valueOf(position++));
                 buttons.add(button);
@@ -56,5 +57,28 @@ public class WAMGUI extends Application {
         Scene scene = new Scene(borderPane);
         stage.setScene(scene);
         stage.show();
+    }
+
+    public void refresh() {
+
+    }
+
+    public void update() {
+        if ( Platform.isFxApplicationThread() ) {
+            this.refresh();
+        }
+        else {
+            Platform.runLater( () -> this.refresh() );
+        }
+    }
+
+    public static void main(String[] args) {
+        if (args.length != 2) {
+            System.out.println("Usage: java WAMGUI host port");
+            System.exit(-1);
+        }
+        else {
+            Application.launch(args);
+        }
     }
 }
