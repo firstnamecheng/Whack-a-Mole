@@ -16,6 +16,7 @@ import java.util.List;
 public class WAMGUI extends Application {
     private WAMBoard board;
     private WAMNetworkClient client;
+    private ArrayList<Button> buttons;
 
     @Override
     public void init() {
@@ -44,7 +45,7 @@ public class WAMGUI extends Application {
         BorderPane borderPane = new BorderPane();
         GridPane gridPane = new GridPane();
         int position = 0;
-        ArrayList<Button> buttons = new ArrayList();
+        this.buttons = new ArrayList();
         for (int row=0; row<this.board.getRows(); ++row) {
             Button[] buttrow = new Button[this.board.getCols()];
             for (int col=0; col<this.board.getCols(); ++col) {
@@ -63,7 +64,13 @@ public class WAMGUI extends Application {
     }
 
     public void refresh() {
-
+        int moleId = this.board.getLastestMole();
+        if (board.getMoleStatus(moleId) == 1) {
+            // this.buttons.get(moleId).setGraphic();
+        }
+        else {
+            //this.buttons.get(moleId).setGraphic();
+        }
     }
 
     public void update() {

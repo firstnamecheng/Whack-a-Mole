@@ -24,6 +24,7 @@ public class WAMBoard {
     private Status status;
     private int rows;
     private int cols;
+    private int lastMoleId;
 
     /**
      * 0 for mole down, 1 for mole up
@@ -55,12 +56,14 @@ public class WAMBoard {
 
     public void moleUp( int moleNum ) {
         moles[ moleNum ] = 1;
+        lastMoleId = moleNum;
         view.update();
 
     }
 
     public void moleDown( int moleNum ) {
         moles[ moleNum ] = 0;
+        lastMoleId = moleNum;
         view.update();
     }
 
@@ -75,6 +78,14 @@ public class WAMBoard {
     public void updateScores( int[] scores ) {
         this.scores = scores;
         view.update();
+    }
+
+    public int getLastestMole() {
+        return this.lastMoleId;
+    }
+
+    public int getMoleStatus(int moleId) {
+        return moles[moleId];
     }
 
     public int[] getScores() {
