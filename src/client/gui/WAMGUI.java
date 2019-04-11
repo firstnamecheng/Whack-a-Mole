@@ -19,8 +19,8 @@ public class WAMGUI extends Application {
     private WAMBoard board;
     private WAMNetworkClient client;
     private ArrayList<Button> buttons;
-    private ImageView moleup = new ImageView(new Image(getClass().getResourceAsStream("moleup.jpg")));
-    private ImageView moledown = new ImageView(new Image(getClass().getResourceAsStream("moledown.jpg")));
+    private Image moleup = new Image(getClass().getResourceAsStream("moleup.jpg"));
+    private Image moledown = new Image(getClass().getResourceAsStream("moledown.jpg"));
 
     @Override
     public void init() {
@@ -54,7 +54,7 @@ public class WAMGUI extends Application {
             Button[] buttrow = new Button[this.board.getCols()];
             for (int col=0; col<this.board.getCols(); ++col) {
                 Button button = new Button();
-                button.setGraphic(moledown);
+                button.setGraphic(new ImageView(moledown));
                 button.setId(String.valueOf(position++));
                 buttons.add(button);
                 buttrow[col] = button;
@@ -71,10 +71,10 @@ public class WAMGUI extends Application {
     public void refresh() {
         int moleId = this.board.getLastestMole();
         if (board.getMoleStatus(moleId) == 1) {
-            this.buttons.get(moleId).setGraphic(moleup);
+            this.buttons.get(moleId).setGraphic(new ImageView(moleup));
         }
         else {
-            this.buttons.get(moleId).setGraphic(moledown);
+            this.buttons.get(moleId).setGraphic(new ImageView(moledown));
         }
     }
 
