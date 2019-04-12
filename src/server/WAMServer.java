@@ -6,6 +6,11 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.ArrayList;
 
+/**
+ *
+ * @author Cheng Ye
+ * @author Albert Htun
+ */
 public class WAMServer implements Runnable, WAMProtocol {
 
     private int rows;

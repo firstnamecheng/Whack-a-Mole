@@ -1,64 +1,90 @@
 package client;
 
-import client.gui.WAMGUI;
 import common.WAMProtocol;
 
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * The network client that communicates with the server
+ *
+ * @author Cheng Ye
+ * @author Albert Htun
+ */
 public class WAMNetworkClient extends Thread implements WAMProtocol{
 
+    /** The client socket */
     private Socket clientSocket;
+
+    /** The reader for the input stream */
     private Scanner networkIn;
+
+    /** The writer for the output stream */
     private PrintStream networkOut;
+
+    /** The WAM game */
     private WAMBoard board;
-    private boolean go;
+
+    /** ID of player(depends on when the connection is accepted) */
     private int id;
 
-    private boolean goodToGo(){
-        return this.go;
-    }
-    private void stopGame() {
-        this.go = false;
-    }
-
-    public WAMNetworkClient(String host, int port ) throws IOException {
+    /**
+     * Constructor for the network client
+     *
+     * @param host host name
+     * @param port port number
+     */
+    public WAMNetworkClient(String host, int port ) {
         try {
             this.clientSocket = new Socket(host, port);
             this.networkIn = new Scanner(clientSocket.getInputStream());
             this.networkOut = new PrintStream(clientSocket.getOutputStream());
-            this.go = true;
 
             String[] args = networkIn.nextLine().strip().split( " " );
             if ( args[ 0 ].equals( WELCOME ) ) {
                 this.board = new WAMBoard( Integer.parseInt( args[ 1 ] ),
-                                            Integer.parseInt( args[ 2 ] ),
-                                            Integer.parseInt( args[ 3 ] ) );
+                                           Integer.parseInt( args[ 2 ] ),
+                                           Integer.parseInt( args[ 3 ] ) );
+                id = Integer.parseInt( args[ 4 ] );
             }
             else {
                 System.err.println( "INCORRECT WELCOME MESSAGE!" );
             }
 
         }
-        catch (Exception e) {
-            e.printStackTrace();
+        catch ( IOException e ) {
+            System.err.println( "IOException: Error connecting to the server" );
         }
     }
 
+    /**
+     * Returns the WAM board
+     */
     public WAMBoard getBoard() {
         return board;
     }
 
+    /**
+     * Called when the user whacks a mole
+     * Sends a message to the server
+     *
+     * @param mole mole number
+     */
     public void whack(int mole) {
         this.networkOut.println(WAMProtocol.WHACK + " " + mole + " " + this.id);
     }
 
+    /**
+     * Main loop for the network client.
+     * Reads every message from the server,
+     * and processes each protocol.
+     */
     @Override
     public void run() {
-        while ( this.goodToGo() ) {
+        boolean notOver = true;
+        while ( notOver ) {
             String[] args = networkIn.nextLine().strip().split( " " );
             switch ( args[ 0 ] ) {
                 case MOLE_UP:
@@ -76,19 +102,19 @@ public class WAMNetworkClient extends Thread implements WAMProtocol{
                     break;
                 case GAME_WON:
                     board.gameWon();
-                    go = false;
+                    notOver = false;
                     break;
                 case GAME_LOST:
                     board.gameLost();
-                    go = false;
+                    notOver = false;
                     break;
                 case GAME_TIED:
                     board.gameTied();
-                    go = false;
+                    notOver = false;
                     break;
                 case ERROR:
                     board.error( args[ 1 ] );
-                    go = false;
+                    notOver = false;
                     break;
             }
 

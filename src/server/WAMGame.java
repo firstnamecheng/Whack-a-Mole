@@ -3,6 +3,11 @@ package server;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ *
+ * @author Cheng Ye
+ * @author Albert Htun
+ */
 public class WAMGame extends Thread {
 
     private int gameTime;

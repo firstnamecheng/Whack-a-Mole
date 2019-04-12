@@ -1,5 +1,10 @@
 package server;
 
+/**
+ *
+ * @author Cheng Ye
+ * @author Albert Htun
+ */
 public class WAM {
 
     private int rows;

@@ -4,6 +4,11 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.Scanner;
 
+/**
+ *
+ * @author Cheng Ye
+ * @author Albert Htun
+ */
 public class WAMListener implements Runnable{
 
     private Scanner input;

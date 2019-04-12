@@ -4,6 +4,11 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.net.Socket;
 
+/**
+ *
+ * @author Cheng Ye
+ * @author Albert Htun
+ */
 public class WAMPlayer {
 
     private Socket player;
