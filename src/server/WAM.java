@@ -3,6 +3,7 @@ package server;
 import java.util.ArrayList;
 
 /**
+ * Server sided WAM board, contains all information
  *
  * @author Cheng Ye
  * @author Albert Htun
@@ -96,6 +97,7 @@ public class WAM {
         if ( moleUp[ moleID ] == true ) {
             moleUp[ moleID ] = false;
             scores[ playerID ] += 2;
+            game.moleDown( moleID );
         }
         else {
            scores[ playerID ] -= 1;
