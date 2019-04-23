@@ -24,7 +24,7 @@ public class WAMPlayer {
         output.flush();
     }
 
-    public void startListener( WAMGame game ) throws IOException {
+    public void startListener( WAM game ) throws IOException {
         Thread listener = new Thread( new WAMListener( player, game ) );
         listener.start();
     }

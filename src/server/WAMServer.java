@@ -50,7 +50,7 @@ public class WAMServer implements Runnable, WAMProtocol {
 
             // Starts the game
             WAMGame game = new WAMGame( rows, cols, gameTime, players );
-            game.start();
+            game.startGame();
 
         }
         catch ( IOException e ) {

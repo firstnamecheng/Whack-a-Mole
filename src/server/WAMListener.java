@@ -12,18 +12,21 @@ import java.util.Scanner;
 public class WAMListener implements Runnable{
 
     private Scanner input;
-    private WAMGame game;
+    private WAM wam;
 
-    public WAMListener( Socket player, WAMGame game ) throws IOException {
+    public WAMListener( Socket player, WAM wam ) throws IOException {
         input = new Scanner( player.getInputStream() );
-        this.game = game;
+        this.wam = wam;
     }
 
     @Override
     public void run() {
 
         while( input.hasNextLine() ) {
-
+            String[] whack = input.nextLine().split( " " );
+            int moleID = Integer.parseInt(  whack[1] );
+            int playerID = Integer.parseInt( whack[2] );
+            wam.whack( moleID, playerID );
         }
 
     }
