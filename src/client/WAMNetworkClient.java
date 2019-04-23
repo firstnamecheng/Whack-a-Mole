@@ -67,6 +67,13 @@ public class WAMNetworkClient extends Thread implements WAMProtocol{
     }
 
     /**
+     * return the id of player
+     */
+    public int getID() {
+        return this.id;
+    }
+
+    /**
      * Called when the user whacks a mole
      * Sends a message to the server
      *

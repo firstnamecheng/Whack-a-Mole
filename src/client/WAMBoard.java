@@ -2,6 +2,9 @@ package client;
 
 import client.gui.WAMGUI;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 /**
  * WAMBoard is the class representation of whack-a-mole's game logic.
  * This is the model part of the MVC architecture.
@@ -14,7 +17,7 @@ public class WAMBoard {
 
 
     /** Different possible statuses of the game */
-    private enum Status {
+    public enum Status {
         I_WON, I_LOST, TIE, NOT_OVER, ERROR;
 
         private String message = null;
@@ -40,7 +43,7 @@ public class WAMBoard {
     private int cols;
 
     /** The latest updated mole, either by moleUp or moleDown */
-    private int lastMoleId;
+    private Queue<Integer> unupdatedMoleId;
 
     /** true for mole is up, false otherwise */
     private boolean[] moleStatus;
@@ -49,7 +52,7 @@ public class WAMBoard {
     private int[] scores;
 
     /** The observer that is to be notified and updated */
-    private WAMGUI view;
+    private connectfour.client.Observer<WAMBoard> view;
 
 
     /**
@@ -68,6 +71,7 @@ public class WAMBoard {
             scores[i] = 0;
         }
         status = Status.NOT_OVER;
+        unupdatedMoleId = new LinkedList<>();
     }
 
     /**
@@ -87,8 +91,8 @@ public class WAMBoard {
      */
     public void moleUp( int moleNum ) {
         moleStatus[ moleNum ] = true;
-        lastMoleId = moleNum;
-        view.update();
+        this.unupdatedMoleId.add(moleNum);
+        alertObservers();
 
     }
 
@@ -100,8 +104,8 @@ public class WAMBoard {
      */
     public void moleDown( int moleNum ) {
         moleStatus[ moleNum ] = false;
-        lastMoleId = moleNum;
-        view.update();
+        this.unupdatedMoleId.add(moleNum);
+        alertObservers();
     }
 
     /**
@@ -125,14 +129,17 @@ public class WAMBoard {
      */
     public void updateScores( int[] scores ) {
         this.scores = scores;
-        view.update();
+        alertObservers();
     }
 
     /**
      * Return the ID of the last mole activity
      */
-    public int getLastestMole() {
-        return this.lastMoleId;
+    public Integer getUnupdatedMole() {
+        if (this.unupdatedMoleId.isEmpty()){
+            return null;
+        }
+        return this.unupdatedMoleId.remove();
     }
 
     /**
@@ -149,8 +156,8 @@ public class WAMBoard {
     /**
      * Returns every player's scores
      */
-    public int[] getScores() {
-        return scores;
+    public int getScores(int playerId) {
+        return scores[playerId];
     }
 
     /**
@@ -158,7 +165,7 @@ public class WAMBoard {
      */
     public void gameWon() {
         status = Status.I_WON;
-        view.update();
+        alertObservers();
     }
 
     /**
@@ -166,7 +173,7 @@ public class WAMBoard {
      */
     public void gameLost() {
         status = Status.I_LOST;
-        view.update();
+        alertObservers();
     }
 
     /**
@@ -174,7 +181,7 @@ public class WAMBoard {
      */
     public void gameTied() {
         status = Status.TIE;
-        view.update();
+        alertObservers();
     }
 
     /**
@@ -185,6 +192,19 @@ public class WAMBoard {
     public void error( String msg ) {
         status = Status.ERROR;
         status.setMessage( msg );
-        view.update();
+        alertObservers();
+    }
+
+    /** when the model changes, the observers are notified via their update() method */
+    private void alertObservers() {
+        this.view.update(this);
+    }
+
+    /**
+     * Get game status.
+     * @return the Status object for the game
+     */
+    public Status getStatus(){
+        return this.status;
     }
 }
