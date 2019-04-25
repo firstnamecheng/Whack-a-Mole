@@ -14,6 +14,24 @@ public class WAMPlayer {
     private Socket player;
     private PrintStream output;
 
+    public void shutdownInput() {
+        try {
+            player.shutdownInput();
+        }
+        catch ( IOException e ) {
+            System.out.println( "Error shutting down player input.");
+        }
+    }
+
+    public void shutdownOutput() {
+        try {
+            player.shutdownOutput();
+        }
+        catch ( IOException e ) {
+            System.out.println( "Error shutting down player output.");
+        }
+    }
+
     public WAMPlayer( Socket player ) throws IOException {
         this.player = player;
         output = new PrintStream( player.getOutputStream() );

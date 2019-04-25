@@ -34,6 +34,9 @@ public class WAMServer implements Runnable, WAMProtocol {
         catch ( IOException e ) {
             System.err.println( "Error while setting up server.");
         }
+        catch ( Exception e ) {
+            System.err.println( "Potential error with args" );
+        }
         players = new ArrayList<>();
     }
 
@@ -46,11 +49,13 @@ public class WAMServer implements Runnable, WAMProtocol {
                 players.add( player );
                 player.send( WELCOME + " " + rows + " " + cols
                         + " " + numPlayers + " " + n );
+                System.out.println( "Player " + n + " has connected." );
             }
 
             // Starts the game
             WAMGame game = new WAMGame( rows, cols, gameTime, players );
             game.startGame();
+            server.close();
 
         }
         catch ( IOException e ) {
@@ -60,6 +65,10 @@ public class WAMServer implements Runnable, WAMProtocol {
     }
 
     public static void main( String[] args ) {
+        if (args.length != 5) {
+            System.out.println("Usage: java WAMGServer [port] [rows] [cols] [players] [game time]");
+            System.exit(-1);
+        }
         WAMServer server = new WAMServer( args );
         server.run();
     }

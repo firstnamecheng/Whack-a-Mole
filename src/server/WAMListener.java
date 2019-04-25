@@ -23,10 +23,15 @@ public class WAMListener implements Runnable{
     public void run() {
 
         while( input.hasNextLine() ) {
-            String[] whack = input.nextLine().split( " " );
-            int moleID = Integer.parseInt(  whack[1] );
-            int playerID = Integer.parseInt( whack[2] );
-            wam.whack( moleID, playerID );
+            try {
+                String[] whack = input.nextLine().split( " " );
+                int moleID = Integer.parseInt( whack[1] );
+                int playerID = Integer.parseInt( whack[2] );
+                wam.whack( moleID, playerID );
+            }
+            catch ( Exception e ) {
+                wam.error( e.getMessage() );
+            }
         }
 
     }

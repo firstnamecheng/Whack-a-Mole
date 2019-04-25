@@ -25,11 +25,17 @@ public class WAM {
     /** Not initialized until game ends */
     private int highestScore;
 
+    /** The class that contains the game loop */
     private WAMGame game;
+
+    /** Error message */
+    private String errorMessage;
 
     public WAM( int rows, int cols, int numPlayers, WAMGame game ) {
         this.rows = rows;
         this.cols = cols;
+        this.game = game;
+        errorMessage = null;
         scores = new int[ numPlayers ];
         moleUp = new boolean[ rows * cols ];
     }
@@ -60,7 +66,7 @@ public class WAM {
      * Updates highest score when game ends
      */
     public void gameEnd() {
-        highestScore = 0;
+        highestScore = -99999;
 
         for ( int score: scores ) {
             if ( score > highestScore ) {
@@ -102,7 +108,7 @@ public class WAM {
         else {
            scores[ playerID ] -= 1;
         }
-        game.updateScores( scores );
+        game.updateScores();
     }
 
     /**
@@ -121,5 +127,36 @@ public class WAM {
      */
     public void moleDown( int moleID ) {
         moleUp[ moleID ] = false;
+    }
+
+    /**
+     * Used to check if mole is up or not
+     * @param moleID ID of mole
+     * @return true if mole is up, false if mole is down
+     */
+    public boolean isMoleUp( int moleID ) { return moleUp[ moleID ]; }
+
+    /**
+     * Called by listeners to set an error message
+     * @param errorMessage the error message
+     */
+    public void error( String errorMessage ) {
+        this.errorMessage = errorMessage;
+    }
+
+    /**
+     * Called by WAMGame to check if there is an error
+     * @return true if there is an error message
+     */
+    public boolean hasError() {
+        return errorMessage != null;
+    }
+
+    /**
+     * Called by WAMGame to retrieve error message to send to players
+     * @return the error message
+     */
+    public String getErrorMessage() {
+        return errorMessage;
     }
 }
