@@ -22,6 +22,7 @@ public class WAMGame {
     private ArrayList<WAMPlayer> players;
     private WAM wam;
     private boolean running;
+    private String errorMessage;
 
     public WAMGame ( int rows, int cols, int gameTime, ArrayList<WAMPlayer> players ) {
         this.gameTime = gameTime;
@@ -29,6 +30,7 @@ public class WAMGame {
         this.players = players;
         wam = new WAM( rows, cols, players.size(), this );
         running = true;
+        errorMessage = null;
     }
 
     public void updateScores() {
@@ -57,6 +59,14 @@ public class WAMGame {
         }
     }
 
+    /**
+     * Called by listeners to set an error message
+     * @param errorMessage the error message
+     */
+    public void error( String errorMessage ) {
+        this.errorMessage = errorMessage;
+    }
+
     private void stopRunning() { running = false; }
 
     private void activateMole() {
@@ -83,7 +93,7 @@ public class WAMGame {
 
         try {
             for ( WAMPlayer player : players ) {
-                player.startListener( wam );
+                player.startListener( wam, this );
             }
         }
         catch ( IOException e ) {
@@ -104,10 +114,10 @@ public class WAMGame {
 
         while ( running ) {
 
-            if ( wam.hasError() ) {
+            if ( errorMessage != null ) {
                 stopRunning();
                 for ( WAMPlayer player: players ) {
-                    player.send( WAMProtocol.ERROR + " " + wam.getErrorMessage() );
+                    player.send( WAMProtocol.ERROR + " " + errorMessage );
                     player.shutdownInput();
                     player.shutdownOutput();
                 }
@@ -133,6 +143,7 @@ public class WAMGame {
             player.shutdownInput();
         }
 
+        stopRunning();
         wam.gameEnd();
         ArrayList<Integer> winnerIDs = wam.getWinnerIDs();
         ArrayList<Integer> loserIDs = wam.getLoserIDs();
@@ -143,7 +154,7 @@ public class WAMGame {
             }
         }
         else {
-            players.get( 0 ).send( WAMProtocol.GAME_WON );
+            players.get( winnerIDs.get( 0 ) ).send( WAMProtocol.GAME_WON );
         }
 
         for ( int loserID: loserIDs ) {
@@ -153,5 +164,7 @@ public class WAMGame {
         for ( WAMPlayer player: players ) {
             player.shutdownOutput();
         }
+
+        System.out.println( "\nGame is over." );
     }
 }

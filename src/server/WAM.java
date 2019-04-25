@@ -28,14 +28,10 @@ public class WAM {
     /** The class that contains the game loop */
     private WAMGame game;
 
-    /** Error message */
-    private String errorMessage;
-
     public WAM( int rows, int cols, int numPlayers, WAMGame game ) {
         this.rows = rows;
         this.cols = cols;
         this.game = game;
-        errorMessage = null;
         scores = new int[ numPlayers ];
         moleUp = new boolean[ rows * cols ];
     }
@@ -136,27 +132,5 @@ public class WAM {
      */
     public boolean isMoleUp( int moleID ) { return moleUp[ moleID ]; }
 
-    /**
-     * Called by listeners to set an error message
-     * @param errorMessage the error message
-     */
-    public void error( String errorMessage ) {
-        this.errorMessage = errorMessage;
-    }
 
-    /**
-     * Called by WAMGame to check if there is an error
-     * @return true if there is an error message
-     */
-    public boolean hasError() {
-        return errorMessage != null;
-    }
-
-    /**
-     * Called by WAMGame to retrieve error message to send to players
-     * @return the error message
-     */
-    public String getErrorMessage() {
-        return errorMessage;
-    }
 }

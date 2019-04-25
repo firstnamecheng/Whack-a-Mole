@@ -91,7 +91,7 @@ public class WAMNetworkClient extends Thread implements WAMProtocol{
     @Override
     public void run() {
         boolean notOver = true;
-        while ( notOver ) {
+        while ( notOver && networkIn.hasNextLine() ) {
             String[] args = networkIn.nextLine().strip().split( " " );
             switch ( args[ 0 ] ) {
                 case MOLE_UP:
@@ -125,6 +125,13 @@ public class WAMNetworkClient extends Thread implements WAMProtocol{
                     break;
             }
 
+        }
+        try {
+            clientSocket.shutdownInput();
+            clientSocket.shutdownOutput();
+        }
+        catch ( IOException e ) {
+            System.err.println( "Error in WAMNetworkClient when shutting down socket." );
         }
     }
 

@@ -9,19 +9,20 @@ import java.util.Scanner;
  * @author Cheng Ye
  * @author Albert Htun
  */
-public class WAMListener implements Runnable{
+public class WAMListener implements Runnable {
 
     private Scanner input;
     private WAM wam;
+    private WAMGame game;
 
-    public WAMListener( Socket player, WAM wam ) throws IOException {
+    public WAMListener( Socket player, WAM wam, WAMGame game ) throws IOException {
         input = new Scanner( player.getInputStream() );
         this.wam = wam;
+        this.game = game;
     }
 
     @Override
     public void run() {
-
         while( input.hasNextLine() ) {
             try {
                 String[] whack = input.nextLine().split( " " );
@@ -30,9 +31,8 @@ public class WAMListener implements Runnable{
                 wam.whack( moleID, playerID );
             }
             catch ( Exception e ) {
-                wam.error( e.getMessage() );
+                game.error( e.getMessage() );
             }
         }
-
     }
 }
