@@ -91,8 +91,11 @@ public class WAMGUI extends Application implements connectfour.client.Observer<W
                 buttons.add(button);
                 buttrow[col] = button;
                 // TODO add event handler and graphics for each button
-                button.setOnAction(e ->
-                    this.client.whack(Integer.parseInt(button.getId()))
+                button.setOnAction(e -> {
+                    if (this.board.getStatus().equals(WAMBoard.Status.NOT_OVER)) {
+                        this.client.whack(Integer.parseInt(button.getId()));
+                    }
+                }
                 );
             }
             gridPane.addRow(row, buttrow);
