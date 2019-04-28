@@ -10,12 +10,6 @@ import java.util.ArrayList;
  */
 public class WAM {
 
-    /** Number of rows */
-    private int rows;
-
-    /** Number of columns */
-    private int cols;
-
     /** Array of scores for all players */
     private int[] scores;
 
@@ -28,27 +22,18 @@ public class WAM {
     /** The class that contains the game loop */
     private WAMGame game;
 
+    /**
+     * Constructor that makes a new WAM object,
+     * which stores all data and logic about the game.
+     * @param rows number of rows
+     * @param cols number of columns
+     * @param numPlayers number of players
+     * @param game the WAMGame which contains the loop that runs the game
+     */
     public WAM( int rows, int cols, int numPlayers, WAMGame game ) {
-        this.rows = rows;
-        this.cols = cols;
         this.game = game;
         scores = new int[ numPlayers ];
         moleUp = new boolean[ rows * cols ];
-    }
-
-
-    /**
-     * Returns the number of rows
-     */
-    public int getRows() {
-        return rows;
-    }
-
-    /**
-     * Returns the number of columns
-     */
-    public int getCols() {
-        return cols;
     }
 
     /**
@@ -71,6 +56,10 @@ public class WAM {
         }
     }
 
+    /**
+     * Returns a list of players with the highest score
+     * @return list of player IDs
+     */
     public ArrayList<Integer> getWinnerIDs() {
         ArrayList<Integer> winnerIDs = new ArrayList<>();
 
@@ -83,6 +72,10 @@ public class WAM {
         return winnerIDs;
     }
 
+    /**
+     * Returns a list of players that did not win
+     * @return list of player IDs
+     */
     public ArrayList<Integer> getLoserIDs() {
         ArrayList<Integer> loserIDs = new ArrayList<>();
 
@@ -95,6 +88,11 @@ public class WAM {
         return loserIDs;
     }
 
+    /**
+     * Called by the listeners to whack a mole.
+     * @param moleID Mole to whack
+     * @param playerID player that did the whacking
+     */
     public synchronized void whack( int moleID, int playerID ) {
         if ( moleUp[ moleID ] == true ) {
             moleUp[ moleID ] = false;

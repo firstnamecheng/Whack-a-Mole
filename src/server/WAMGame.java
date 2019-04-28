@@ -17,13 +17,32 @@ import static java.lang.Thread.sleep;
  */
 public class WAMGame {
 
+    /** Amount of time, in seconds, that the game runs for */
     private int gameTime;
+
+    /** Number of moles */
     private int numMoles;
+
+    /** Number of players */
     private ArrayList<WAMPlayer> players;
+
+    /** WAM object that contains game data and game logic */
     private WAM wam;
+
+    /** True if game is running (time is not up) */
     private boolean running;
+
+    /** Null if there is no error message */
     private String errorMessage;
 
+    /**
+     * Constructor for the WAMGame object
+     *
+     * @param rows number of rows
+     * @param cols number of columns
+     * @param gameTime game time, in seconds
+     * @param players number of players
+     */
     public WAMGame ( int rows, int cols, int gameTime, ArrayList<WAMPlayer> players ) {
         this.gameTime = gameTime;
         this.numMoles = rows * cols;
@@ -33,6 +52,9 @@ public class WAMGame {
         errorMessage = null;
     }
 
+    /**
+     * Sends scores to all players
+     */
     public void updateScores() {
         int[] playerScores = wam.getScores();
 
@@ -45,6 +67,10 @@ public class WAMGame {
         }
     }
 
+    /**
+     * Tells a specific mole to pop up
+     * @param moleID the ID of the mole to pop up
+     */
     public void moleUp( int moleID ) {
         wam.moleUp( moleID );
         for ( WAMPlayer player: players ) {
@@ -52,6 +78,10 @@ public class WAMGame {
         }
     }
 
+    /**
+     * Tells a specific mole to hide
+     * @param moleID the ID of the mole to go back down
+     */
     public void moleDown( int moleID ) {
         wam.moleDown( moleID );
         for ( WAMPlayer player: players ) {
@@ -67,8 +97,16 @@ public class WAMGame {
         this.errorMessage = errorMessage;
     }
 
+    /**
+     * Called when game time is up
+     */
     private void stopRunning() { running = false; }
 
+    /**
+     * Tells a random mole to pop up,
+     * and after a random amount of time,
+     * tell it to go down if it has not been hit.
+     */
     private void activateMole() {
         Random r = new Random();
 
@@ -89,6 +127,11 @@ public class WAMGame {
         }
     }
 
+    /**
+     * The main loop for this class.
+     * Starts game timer, starts random mole activity,
+     * and sends game end messages.
+     */
     public void startGame() {
 
         try {
