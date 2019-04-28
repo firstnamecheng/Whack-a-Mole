@@ -52,7 +52,7 @@ public class WAMBoard {
     private int[] scores;
 
     /** The observer that is to be notified and updated */
-    private connectfour.client.Observer<WAMBoard> view;
+    private client.Observer<WAMBoard> view;
 
 
     /**
