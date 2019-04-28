@@ -18,7 +18,7 @@ public class WAMBoard {
 
     /** Different possible statuses of the game */
     public enum Status {
-        I_WON, I_LOST, TIE, NOT_OVER, ERROR;
+        I_WON, I_LOST, TIE, NOT_STARTED, NOT_OVER, ERROR;
 
         private String message = null;
 
@@ -67,10 +67,10 @@ public class WAMBoard {
         this.cols = cols;
         moleStatus = new boolean[ rows * cols ];
         scores = new int[ numPlayers ];
+        status = Status.NOT_STARTED;
         for ( int i = 0; i < numPlayers; i++ ) {
             scores[i] = 0;
         }
-        status = Status.NOT_OVER;
         unupdatedMoleId = new LinkedList<>();
     }
 
@@ -193,6 +193,14 @@ public class WAMBoard {
         status = Status.ERROR;
         status.setMessage( msg );
         alertObservers();
+    }
+
+    /**
+     * Mutator for board status field
+     * @param status status of the board
+     */
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     /** when the model changes, the observers are notified via their update() method */

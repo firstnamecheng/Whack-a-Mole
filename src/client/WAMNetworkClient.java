@@ -95,6 +95,9 @@ public class WAMNetworkClient extends Thread implements WAMProtocol{
             String[] args = networkIn.nextLine().strip().split( " " );
             switch ( args[ 0 ] ) {
                 case MOLE_UP:
+                    if (board.getStatus().equals(WAMBoard.Status.NOT_STARTED)) {
+                        board.setStatus(WAMBoard.Status.NOT_OVER);
+                    }
                     board.moleUp( Integer.parseInt( args[ 1 ] ) );
                     break;
                 case MOLE_DOWN:
