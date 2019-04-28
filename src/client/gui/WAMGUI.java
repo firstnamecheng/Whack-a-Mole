@@ -23,7 +23,7 @@ import java.util.List;
  * @author Albert Htun
  * @author Cheng Ye
  */
-public class WAMGUI extends Application implements connectfour.client.Observer<WAMBoard> {
+public class WAMGUI extends Application implements client.Observer<WAMBoard> {
 
     /** The game board that contains all the stats and game core logic */
     private WAMBoard board;
