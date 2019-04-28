@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
+import static java.lang.System.exit;
 import static java.lang.Thread.sleep;
 
 /**
@@ -110,14 +111,24 @@ public class WAMGame {
     private void activateMole() {
         Random r = new Random();
 
-        int moleID = r.nextInt( numMoles );
-        if ( !wam.isMoleUp( moleID ) ) {
-            moleUp( moleID );
+        boolean noNewMole = true;
+        int moleID = 0;
+        while ( noNewMole ) {
+            moleID = r.nextInt( numMoles );
+            if ( !wam.isMoleUp( moleID ) ) {
+                moleUp( moleID );
+                noNewMole = false;
+            }
         }
 
+        // Min 1 second, max 3 seconds of default uptime
         int moleUptime = r.nextInt( 2 ) + 1;
+        // Base = sqrt( 16 ) or a 4 by 4 board
+        long base = 4;
+        // Balanced out by the sqrt( numMoles )
+        long balancer = (long)Math.sqrt( numMoles );
         try {
-            sleep( moleUptime * 1000 );
+            sleep( moleUptime * 1000 * balancer / base );
             if ( wam.isMoleUp( moleID ) ) {
                 moleDown( moleID );
             }
@@ -172,18 +183,31 @@ public class WAMGame {
 
             // Delay until next mole can pop up
             Random r = new Random();
+
+            // Min .3 seconds, max 1.5 seconds of default delay
             int delay = r.nextInt( 12 ) + 3;
+            // Base = sqrt( 16 ) or a 4 by 4 board
+            long base = 4;
+            // Balanced out by the sqrt( numMoles )
+            long balancer = (long)Math.sqrt( numMoles );
             try {
-                sleep( delay * 100 );
+                sleep( delay * 100 * base / balancer );
             }
             catch ( InterruptedException e ) {
                 System.err.println( "Error: sleep() in game loop." );
             }
         }
 
-        // To stop buttons from being pressed
+        // To stop receiving more inputs
         for ( WAMPlayer player: players ) {
             player.shutdownInput();
+        }
+
+        // To clear the board after game ends
+        for ( int i = 0; i < numMoles; i++ ) {
+            if ( wam.isMoleUp( i ) ) {
+                moleDown( i );
+            }
         }
 
         stopRunning();
